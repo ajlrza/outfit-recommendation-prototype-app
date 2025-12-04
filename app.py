@@ -8,7 +8,7 @@ from classes import textGeneratedContent
 # os.environ['GOOGLE_API_KEY'] = 'YOUR_API_KEY' 
 
 # 2. Initialize the client (Synchronous is easier for scripts)
-client = genai.Client(api_key="AIzaSyAiF4UlZ0P3j7qJ-Vrok_8CXoYTSpM2cDk")
+client = genai.Client(api_key="")
 
 height_input = input("What is your height?\n")
 body_shape = input("What is your body shape?\n")
