@@ -4,10 +4,6 @@ from google.genai import types
 from PIL import Image
 from classes import textGeneratedContent
 
-# 1. Set your API key (or set it in your environment variables)
-# os.environ['GOOGLE_API_KEY'] = 'YOUR_API_KEY' 
-
-# 2. Initialize the client (Synchronous is easier for scripts)
 client = genai.Client(api_key="")
 
 sex = input("What is your sex?\n")
@@ -18,7 +14,6 @@ under_tone = input("What is your undertone?\n")
 
 body_features = {"sex": sex, "height": height_input, "shape": body_shape, "skin_tone": skin_tone, "under_tone": under_tone}
 
-#3. Create the prompt
 
 textGeneratedContent = textGeneratedContent(body_features["height"], body_features["shape"], body_features["skin_tone"], body_features["under_tone"])
 
@@ -34,20 +29,15 @@ def recommendation_response_two():
     contents=textGeneratedContent.SkintoneAndUndertoneReason(body_features["skin_tone"], body_features["under_tone"]))
     return response_two
 
-# Update your final function to include tools
 def final_recommendation_response():
-    # 1. Get the reasoning from previous steps
     rec_one = recommendation_response_one()
     rec_two = recommendation_response_two()
     
-    # 2. Construct a specific prompt for the final step
-    # We combine the previous insights + the instruction to search
     prompt_text = textGeneratedContent.FeatureCombinationReason(
         firstCombination=rec_one, 
         secondCombination=rec_two
     )
     
-    # Append the "Shopping" instruction
     prompt_text += """
     \n
     Based on the analysis above, create 3 distinct outfit combinations. 
@@ -58,14 +48,13 @@ def final_recommendation_response():
     """
 
     final_response = client.models.generate_content(
-        model="gemini-2.5-pro", # Use Pro for better reasoning/search
+        model="gemini-2.5-pro",
         contents=prompt_text,
         config=types.GenerateContentConfig(
-            tools=[types.Tool(google_search=types.GoogleSearch())], # <--- THIS IS KEY
+            tools=[types.Tool(google_search=types.GoogleSearch())], 
             response_modalities=["TEXT"]
         )
     )
     return final_response
 
-# 4. Print the result
 print(final_recommendation_response().text)
